@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""/>
+    <link rel="stylesheet" href="paul.css" />
+    <link rel="stylesheet" href="leaflet-routing-machine.cs" />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.pm@latest/dist/leaflet.pm.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="L.Control.SlideMenu.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="../dist/leaflet-routing-machine.css" />
+    <link rel="stylesheet" href="index.css" />
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+ <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+ integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+ crossorigin=""></script>
+ <script src = "./coffe.js"></script>
+ <script src = "./Dekut.js"></script>
+<script src = "./Counties.js"></script>
+<script src = "./Forests.js"></script>
+<script src = "./Grasslands.js"></script>
+<script src = "./Health.js"></script>
+<script src = "./Lakes.js"></script>
+<script src = "./Nakuru.js"></script>
+<script src = "./Rivers.js"></script>
+<script src = "./Sub_Locations.js"></script>
+<script src = "./Towns.js"></script>
+<script src = "./Waterpoints.js"></script>
+<script src = "./plugins/leaflet-routing-machine.js"></script>
+<script src="https://unpkg.com/leaflet.pm@latest/dist/leaflet.pm.min.js"></script>
+<script src="L.Control.SlideMenu.js"></script>
+ <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+ 
+</head>
+<body>
+    <head>
+      <center><h1>INTERACTIVE WEB MAP FOR NAKURU COUNTY</h1></center> 
+    
+        <div class="desc">
+            <div class="image">
+                <img src="photo.jpeg" alt="image">
+            </div>
+            <div class="content">
+                <!-- <h1>PAUL WAININAINA KIMANI.</h1>\ -->
+                <!-- <h3>REG NO: E032-01-2714/2021.</h3> -->
+            </div>
+    </head>
+<!--    
+        <div class = "sidebar">
+            paul
+        </div> -->
+    <div id="map">
+        <div id="popup" class="ol-popup">
+            <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+            <div id="popup-content"></div>
+            <id></id>
+    </div> 
+    <div id="mySidenav" class="sidenav">
+    <P><H3>OUR PROJECT YOU CAN <br>Zoom in/out <br><br><br>Measure distance and area<br><br><br>Get the shortest distance between points <br><br><br>Add points</H3></P>
+    </div>
+
+    <script>
+
+        var map = L.map('map').setView([ -0.397829, 36.960969], 8);
+       
+       var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+           maxZoom: 19,
+           attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+       });
+       osm.addTo(map); 
+    
+       if(!navigator.geolocation) {
+           console.log("Your browser doesn't support geolocation feature")
+       
+       } else{
+           navigator.geolocation.getCurrentPosition(getPosition)
+       }
+       
+       function getPosition(position){
+          // console.long(position)
+           var lat = position.coords.latitude
+           var long = position.coords.longitude
+           var accuracy = position.coords.accuracy
+           
+         var marker = L.marker([lat, long])
+         var circle = L.circle([lat, long], {radius: accuracy})
+       
+        var featureGroup = L.featureGroup([marker, circle]).addTo(map)
+       
+           console.log("Your coordinate is:lat:"+lat, "long:"+long, "Accuracy:"+accuracy)
+       }
+
+       const geojsonMarkerOptions ={
+        radius: 8,
+        fillcolor: 	"#FF0000",
+        color: "#FF0000",
+        weight: 1,
+        opacity: 1,
+        fillcapacity:0.8
+       }
+       var coffe = L.geoJson(coffe).addTo(map);
+    //    var Dekut = L.geoJson(Dekut).addTo(map)
+    //    var Counties = L.geoJson(Counties).addTo(map)
+       var Nakuru = L.geoJson(Nakuru).addTo(map);
+       var Forests = L.geoJson(Forests).addTo(map);
+       var Grasslands = L.geoJson(Grasslands).addTo(map);
+       var Health = L.geoJson(Health, {pointToLayer: function(feature, latlng, geojsonMarkerOptions){
+        return L.circleMarker(latlng)
+       }}).addTo(map);
+       var Lakes = L.geoJson(Lakes).addTo(map);
+       var Rivers = L.geoJson(Rivers).addTo(map);
+       var Sub_Locations = L.geoJson(Sub_Locations).addTo(map);
+       var Towns = L.geoJson(Towns).addTo(map);
+       var Waterpoints = L.geoJson(Waterpoints).addTo(map);
+       
+       var geocoder =L.Control.geocoder().addTo(map);
+    
+       //Choropleth map
+    //    L.geoJson(Counties).addTo(map);
+    //    L.geoJson(Counties).addTo(map);
+    //    function getColor(a) {
+    //     return a > 6  ? '#31a354' :
+    //            a > 5  ? '#FC4E2A' :
+    //            a > 3  ? '#f03b20' :
+    //            a > 2   ? '#FEB24C' :
+    //            a > 1   ? '#FED976' :
+    //                       '#FFEDA0#c51b8a';
+    // }
+    // function style(feature) {
+    //     return {
+    //         fillColor: getColor(feature.properties.AREA),
+    //         weight: 2,
+    //         opacity: 1,
+    //         color: 'white',
+    //         dashArray: '3',
+    //         fillOpacity: 0.7
+    // }
+    // };
+    // function highlightFeature(e) {
+    //     var layer = e.target;
+    
+    //     layer.setStyle({
+    //         weight: 5,
+    //         color: '#666',
+    //         dashArray: '',
+    //         fillOpacity: 0.7
+    //     });
+    
+    //     layer.bringToFront();
+    
+    //     info.update(layer.feature.properties);
+    // }
+    
+    // // L.geoJson(Counties, {style: style}).addTo(map);
+    
+    // function resetHighlight(e) {
+    //     geojson.resetStyle(e.target);
+    
+    //     info.update();
+    // }
+    
+    // // var geojson;
+    // // // ... our listeners
+    // // geojson = L.geoJson(Counties);
+    
+    // function zoomToFeature(e) {
+    //     map.fitBounds(e.target.getBounds());
+    // }
+    
+    
+    // function onEachFeature(feature, layer) {
+    //     layer.on({
+    //         mouseover: highlightFeature,
+    //         mouseout: resetHighlight,
+    //         click: zoomToFeature
+    //     });
+    // }
+    
+    // var geojson = L.geoJson(Counties, {
+    //     style: style,
+    //     onEachFeature: onEachFeature
+    // }).addTo(map);
+    
+    
+    // var info = L.control();
+    
+    // info.onAdd = function (map) {
+    //     this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+    //     this.update();
+    //     return this._div;
+    // };
+    
+    // // method that we will use to update the control based on feature properties passed
+    // info.update = function (props) {
+    //     this._div.innerHTML = '<h4>COUNTY NAME</h4>' +  (props ?
+    //         '<b>' + props.COUNTY + '</b><br />' + AREA+ ' KM / mi<sup>2</sup>'
+    //         : 'Hover over a COUNTY');
+    // };
+    
+    // info.addTo(map);
+    
+    
+
+    
+    
+    //    L.Control.geocoder().addTo(map);
+    
+    //    var polygondata = L.geoJson(polygonJson, {
+    //     onEachFeature: function(feature, layer){
+    //         layer.bidPopup('<b>This is a </b>'+feature.properties.name)
+    //     },
+    //     style:{
+    //         fillColor:'red',
+    //         fillOpacity: 1,
+    //         color:'green'
+    //     }
+    //    }).addTo(map); 
+    var Stamen_Watercolor = L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.{ext}', {
+        minZoom: 1,
+        maxZoom: 16,
+        attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://www.stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        ext: 'jpg'
+    });
+    var Esri_WorldStreetMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
+    });
+    var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+    });
+    
+    var baseLayers = {
+        "OpenStreetMap": osm,
+        "Satellite":Esri_WorldImagery,
+        "Google Map":Esri_WorldStreetMap,
+        "Water Color":Stamen_Watercolor,
+    };
+
+    var overlayMaps = {
+    "Dekut": Dekut,
+    "Forests":Forests,
+    "Grasslands":Grasslands,
+    "Health":Health,
+    "Lakes":Lakes,
+    "Nakuru":Nakuru,
+    "Rivers":Rivers,
+    "Sub_Locations":Sub_Locations,
+    "Towns":Towns,
+    "Waterpoints":Waterpoints,
+};
+    // var overlays = {
+    //     "Marker": marker,
+    //     "Roads": roadsLayer
+    // };
+    
+    L.control.layers(baseLayers, overlayMaps).addTo(map);
+    L.Control
+
+    var options = {
+  position: 'topleft', // toolbar position, options are 'topleft', 'topright', 'bottomleft', 'bottomright'
+  drawMarker: true, // adds button to draw markers
+  drawPolyline: true, // adds button to draw a polyline
+  drawRectangle: true, // adds button to draw a rectangle
+  drawPolygon: true, // adds button to draw a polygon
+  drawCircle: true, // adds button to draw a cricle
+  cutPolygon: true, // adds button to cut a hole in a polygon
+  editMode: true, // adds button to toggle edit mode for all layers
+  removalMode: true, // adds a button to remove layers
+};
+map.pm.addControls(options);
+
+
+
+// const left = '<div class="header">Slide Menu (Left)</div>';
+//       const right = '<div class="header">Slide Menu (Right)</div>';
+//       let contents = `
+//             <div class="content">
+//                 <div class="title">Read Me</div>
+//                 <p>A simple slide menu for Leaflet.<br>
+//                 When you click the menu button and the menu is displayed to slide.<br>
+//                 Please set the innerHTML to slide menu.</p>
+//                 <div class="title">Usage</div>
+//                 <p>L.control.slideMenu("&lt;p&gt;test&lt;/p&gt;").addTo(map);</p>
+//                 <div class="title">Arguments</div>
+//                 <p>L.control.slideMenu(&lt;String&gt;innerHTML, &lt;SlideMenu options&gt;options?)</p>
+//                 <div class="title">Options</div>
+//                 <p>position<br>
+//                 menuposition<br>
+//                 width<br>
+//                 height<br>
+//                 direction<br>
+//                 changeperc<br>
+//                 delay<br>
+//                 icon<br>
+//                 hidden</p>
+//                 <div class="title">Methods</div>
+//                 <p>setContents(&lt;String&gt;innerHTML)</p>
+//                 <div class="bottom">
+//                     <span>License <span style="font-weight: bold">MIT</span></span>
+//                 </div>
+//             </div>`;
+
+//       /* left */
+//       L.control.slideMenu(left + contents).addTo(map);
+
+//       /* right */
+//       const slideMenu = L.control
+//         .slideMenu("", {
+//           position: "topright",
+//           menuposition: "topright",
+//           width: "30%",
+//           height: "400px",
+//           delay: "50",
+//           icon: "chevron-left",
+//         })
+//         .addTo(map);
+//       slideMenu.setContents(right + contents);
+
+      
+      </script>
+      </div>
+     
+      <!-- <footer>
+        <H1>WEB GIS PAUL</H1>
+        <div class="contact">
+            <h3>Contacts</h3>
+            <h5>+254745248604/h5>
+            <h5>kimani.paul21.dkut.ac.ke</h4>
+        </div>
+
+        <div class="socials">
+            <h4>Socials</h4>
+            <h6>Twitter: Surveyor Kimani</h6>
+            <h5>facebook: Serveyor kimani</h5>
+        </div>
+
+        <div class="about">
+            <h3>ABOUT</h3>
+            <h4>PAUL</h4>
+            <h4>#python </h4>
+            <h4>#Java script</h4>
+        <h5><div id="python"></div></h5>
+        <h4><div id="java"></div></h4>
+        </div>
+      </footer> -->
+    
+    
+      <!-- div class="footer">
+      <h3> &copy; Web Mapping Group 1 2023- All Right Reserved. </h3>
+      </div>
+       -->
+
+       <div class="footer">
+<h3> &copy; &copy;GROUP 11 </h3>
+</div>
+
+</body>
+
+</html>
+
